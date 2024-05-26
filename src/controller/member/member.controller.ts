@@ -10,18 +10,16 @@ export class MemberController {
   @Post()
   async createMember(@Res() response, @Body() createMemberDto: CreateMemberDto) {
     try {
-      console.log('createMemberDto', createMemberDto);
       const member = await this.membersService.create(createMemberDto);
       return response.status(HttpStatus.CREATED).json({
         message: 'success',
         member
       });
     } catch (error) {
-      console.log('error', error, createMemberDto);
       return response.status(HttpStatus.BAD_REQUEST).json({
         statusCode: 400,
-        message: 'Error: member creation failed!',
-        error: error.responses
+        message: 'Error: member creation failed',
+        error,
       });
     }
   }
@@ -35,7 +33,7 @@ export class MemberController {
         members
       });
     } catch (error) {
-      return response.status(error.status).json(error.response);
+      return response.status(error.status).json(error);
     }
   }
 
@@ -62,7 +60,11 @@ export class MemberController {
         updatedMember
       });
     } catch (error) {
-      return response.status(error.status).json(error.response);
+      return response.status(HttpStatus.BAD_REQUEST).json({
+        statusCode: 400,
+        message: 'Error: member updation failed',
+        error,
+      });
     }
   }
 
